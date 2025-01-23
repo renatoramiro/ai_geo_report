@@ -96,7 +96,7 @@ Exemplo de requisição:
       "remoteJid": "5583XXXXXXXX@s.whatsapp.net"
     },
     "message": {
-      "conversation": "Gerar relatório para terreno..."
+      "conversation": "Gerar relatório para terreno...."
     }
   }
 }
