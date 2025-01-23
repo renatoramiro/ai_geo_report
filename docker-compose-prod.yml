@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  geologia_app:
+    build: .
+    ports:
+      - "6248:6248"
+    environment:
+      - EVOLUTION_BASE_URL=${EVOLUTION_BASE_URL}
+      - EVOLUTION_API_TOKEN=${EVOLUTION_API_TOKEN}
+      - EVOLUTION_INSTANCE=${EVOLUTION_INSTANCE}
+      - EVOLUTION_INSTANCE_TOKEN=${EVOLUTION_INSTANCE_TOKEN}
+    volumes:
+      - geologia_app_data:/var/lib/geologia_app
+    command: >
+      sh -c "uvicorn main:app --host 0.0.0.0 --port 6248"
+    networks:
+      - SmartAutoHubNet
+    image: geologia_app:0.0.2
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+          constraints:
+            - node.role == manager
+      resources:
+          limits:
+            cpus: '0.5'
+            memory: 384M
+          reservations:
+            cpus: '0.25'
+            memory: 256M
+      labels: 
+          - traefik.enable=true
+          - traefik.http.routers.geologia_app.rule=Host(`geologia.example.com`)
+          - traefik.http.services.geologia_app.loadbalancer.server.port=6248
+          - traefik.http.routers.geologia_app.service=geologia_app
+          - traefik.http.routers.geologia_app.tls.certresolver=letsencryptresolver
+          - traefik.http.routers.geologia_app.entrypoints=websecure
+          - traefik.http.routers.geologia_app.tls=true
+
+networks:
+  SmartAutoHubNet:
+    name: SmartAutoHubNet
+    external: true
+
+volumes:
+  geologia_app_data:
+    external: true

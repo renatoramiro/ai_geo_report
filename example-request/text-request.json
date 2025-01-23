@@ -1,0 +1,56 @@
+{
+    "headers": {
+        "host": "n8n.smartautohub.net",
+        "user-agent": "axios/1.7.5",
+        "content-length": "921",
+        "accept": "application/json, text/plain, */*",
+        "accept-encoding": "gzip, compress, deflate, br",
+        "content-type": "application/json",
+        "x-forwarded-for": "172.18.0.1",
+        "x-forwarded-host": "n8n.smartautohub.net",
+        "x-forwarded-port": "443",
+        "x-forwarded-proto": "https",
+        "x-forwarded-server": "4b24de9ab0ec",
+        "x-real-ip": "172.18.0.1"
+    },
+    "params": {},
+    "query": {},
+    "body": {
+        "event": "messages.upsert",
+        "instance": "intelichat",
+        "data": {
+        "key": {
+            "remoteJid": "558396369508@s.whatsapp.net",
+            "fromMe": false,
+            "id": "3EB0644C40222B5BC4CE52"
+        },
+        "pushName": "Renato Ramiro",
+        "message": {
+            "conversation": "Oi Júlia! Gera um relatório pra mim pra um terreno de 25 hectares, a 250m do nível do mar, localizado em Santana de Parnaíba, com o objetivo de extração de areia",
+            "messageContextInfo": {
+            "deviceListMetadata": {
+                "senderKeyHash": "ImYns3/WWqiaPg==",
+                "senderTimestamp": "1734864028",
+                "senderAccountType": "E2EE",
+                "receiverAccountType": "E2EE",
+                "recipientKeyHash": "QzxEMBQhkxUH1w==",
+                "recipientTimestamp": "1734534313"
+            },
+            "deviceListMetadataVersion": 2,
+            "messageSecret": "tfyJhs+YaGt2Vz7MTuCxJNGCMvtOQ58rTs7c/ACaV28="
+            }
+        },
+        "messageType": "conversation",
+        "messageTimestamp": 1735748175,
+        "instanceId": "06c0fa04-3994-4868-8cfc-00361d9d4b05",
+        "source": "web"
+        },
+        "destination": "https://n8n.smartautohub.net/webhook-test/wa-leads-talk",
+        "date_time": "2025-01-01T13:16:16.226Z",
+        "sender": "558393343388@s.whatsapp.net",
+        "server_url": "https://evolution.smartautohub.net",
+        "apikey": "B327C16570F4-441C-9EB0-D1C4A8986DB1"
+    },
+    "webhookUrl": "https://webhook.smartautohub.net/webhook-test/wa-leads-talk",
+    "executionMode": "test"
+}

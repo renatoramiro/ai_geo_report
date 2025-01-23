@@ -1,0 +1,10 @@
+crewai==0.98.0
+evolutionapi==0.0.9
+fastapi==0.115.6
+uvicorn==0.34.0
+python-multipart==0.0.20
+requests==2.32.3
+python-dotenv==1.0.1
+md2pdf==1.0.1
+pytz==2024.2
+litellm==1.57.4

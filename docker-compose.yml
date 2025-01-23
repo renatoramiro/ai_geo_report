@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  geologia_app:
+    build: .
+    ports:
+      - "6248:6248"
+    environment:
+      - EVOLUTION_BASE_URL=${EVOLUTION_BASE_URL}
+      - EVOLUTION_API_TOKEN=${EVOLUTION_API_TOKEN}
+      - EVOLUTION_INSTANCE=${EVOLUTION_INSTANCE}
+      - EVOLUTION_INSTANCE_TOKEN=${EVOLUTION_INSTANCE_TOKEN}
+    volumes:
+      - ./relatorios:/app/relatorios
+      - ./.env:/app/.env
+    command: >
+      sh -c "uvicorn main:app --host 0.0.0.0 --port 6248"
+    networks:
+      - app_network
+    image: geologia_app:0.0.1
+    deploy:
+      mode: replicated
+      replicas: 1
+      resources:
+          limits:
+            cpus: '0.5'
+            memory: 384M
+          reservations:
+            cpus: '0.25'
+            memory: 256M
+
+networks:
+  app_network:
+    driver: bridge
