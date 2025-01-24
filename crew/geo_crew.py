@@ -18,7 +18,7 @@ class GeoCrew():
         crew = Crew(
             agents=[coletor, relator],
             tasks=[coletar_dados_task, gerar_relatorio_task],
-            verbose=False
+            verbose=True
         )
 
         result = crew.kickoff(inputs={"user_data": user_data})

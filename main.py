@@ -26,32 +26,51 @@ async def process_and_send_report(text: str, wa_message: MessageWhatsapp) -> dic
     """
     Processa o texto e envia o relatório via WhatsApp
     """
-    # Gerar nome do arquivo baseado na data/hora
-    tz = pytz.timezone('America/Sao_Paulo')
-    file_name = datetime.now(tz).strftime("%Y-%m-%d_%H-%M-%S")
-    
-    # Executar o GeoCrew para gerar o relatório
     try:
-        result = GeoCrew().run(text, file_name)
+        # Criar instância do SendWhatsapp
+        whatsapp = SendWhatsapp()
+        
+        # Enviar mensagem de confirmação
+        whatsapp.textMessage(
+            number=wa_message.remote_jid.split('@')[0],
+            msg="Recebido! Estou gerando seu relatório, por favor aguarde..."
+        )
+        
+        # Gerar nome do arquivo baseado no timestamp
+        timestamp = datetime.now(pytz.timezone('America/Sao_Paulo')).strftime('%Y%m%d_%H%M%S')
+        file_name = f"relatorio_{timestamp}"
+        
+        # Criar instância do GeoCrew
+        crew = GeoCrew()
+        
+        # Executar o processo
+        result = crew.run(text, file_name)
+        
+        # Verificar se os arquivos foram gerados
+        pdf_file = os.path.join(relatorios_dir, f'{file_name}.pdf')
+        docx_file = os.path.join(relatorios_dir, f'{file_name}.docx')
+        
+        if not os.path.exists(pdf_file) or not os.path.exists(docx_file):
+            return {"status": "error", "message": "Falha ao gerar os arquivos do relatório"}
+        
+        # Enviar o PDF
+        whatsapp.send_pdf(
+            number=wa_message.remote_jid.split('@')[0],
+            pdf_file=pdf_file,
+            caption="Aqui está seu relatório em PDF!"
+        )
+        
+        # Enviar o DOCX
+        whatsapp.send_document(
+            number=wa_message.remote_jid.split('@')[0],
+            document_file=docx_file,
+            caption="E aqui está a versão editável em Word!"
+        )
+        
+        return {"status": "success", "message": "Relatório gerado e enviado com sucesso!"}
+    
     except Exception as e:
         return {"status": "error", "message": str(e)}
-
-    # Verificar se o PDF foi gerado
-    pdf_path = os.path.join(relatorios_dir, f'relatorio_{file_name}.pdf')
-    
-    if os.path.exists(pdf_path):
-        try:
-            whatsapp = SendWhatsapp()
-            response = whatsapp.send_pdf(
-                number=wa_message.remote_jid.split('@')[0],
-                pdf_file=pdf_path,
-                caption="Aqui está seu relatório geológico!"
-            )
-            return {"status": "success", "message": "Relatório gerado e enviado com sucesso"}
-        except Exception as e:
-            return {"status": "error", "message": str(e)}
-    
-    return {"status": "error", "message": "Falha ao gerar o relatório"}
 
 async def process_audio(audio_base64: str, wa_message: MessageWhatsapp) -> str:
     try:
@@ -90,8 +109,8 @@ async def webhook(request: Request):
         
         # Se temos texto (seja da mensagem ou do áudio), processar
         if text:
-            return "Texto recebido: " + text
-            # return await process_and_send_report(text, wa_message)
+            # return "Texto recebido: " + text
+            return await process_and_send_report(text, wa_message)
         
         return {"status": "error", "message": "Nenhum texto ou áudio encontrado na mensagem"}
         

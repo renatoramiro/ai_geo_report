@@ -1,5 +1,6 @@
 from crewai import Task
 from .tools.generate_pdf_tool import GeneratePDFTool
+from .tools.generate_docx_tool import GenerateDocxTool
 
 class Tasks():
     def coletar_dados(self, agent):
@@ -34,10 +35,11 @@ Use linguagem clara, objetiva e profissional. Estruture o relatório com título
 
 Ao final do relatório, não inclua nenhuma consideração final ou informação, apenas inclua os dados fornecidos pelo agente Coletor de Dados.
 
-Gere o relatório em PDF.
+Gere o relatório em PDF e Word.
             """,
             expected_output="Relatório geológico estruturado",
             tools=[
-                GeneratePDFTool(file_name=file_name)
+                GeneratePDFTool(file_name=file_name),
+                GenerateDocxTool(word_file=file_name)
             ]
         )

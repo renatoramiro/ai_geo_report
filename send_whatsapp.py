@@ -141,25 +141,40 @@ class SendWhatsapp:
         
         return "Vídeo enviado"
 
-    def document(self, number, document_file, caption=""):
+    def send_document(self, number, document_file, caption=""):
         # Enviar documento
-        if not os.path.exists(document_file):
-            raise FileNotFoundError(f"Arquivo '{document_file}' não encontrado.")
-
-        media_message = MediaMessage(
-            number=number,
-            mediatype="document",
-            mimetype="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-            caption=caption,
-            fileName=os.path.basename(document_file),
-            media=""
-        )
-
-        self.client.messages.send_media(
-            self.evo_instance_id, 
-            media_message, 
-            self.evo_instance_token,
-            document_file
-        )
+        url = f"{self.evo_base_url}/message/sendMedia/{self.evo_instance_id}"
         
-        return "Documento enviado"
+        try:
+            # Verificar se o arquivo existe
+            if not os.path.exists(document_file):
+                raise FileNotFoundError(f"Arquivo não encontrado: {document_file}")
+            
+            # Ler o arquivo
+            with open(document_file, 'rb') as file:
+                doc_content = file.read()
+            
+            # Codificar o conteúdo em base64
+            doc_base64 = base64.b64encode(doc_content).decode('utf-8')
+            
+            headers = {
+                "Content-Type": "application/json",
+                "apikey": self.evo_api_token
+            }
+            
+            data = {
+                "number": number,
+                "mediatype": "document",
+                "media": doc_base64,
+                "fileName": os.path.basename(document_file),
+                "mimetype": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+            }
+            
+            if caption:
+                data["caption"] = caption
+            
+            response = requests.post(url, headers=headers, json=data)
+            return response.json()
+            
+        except Exception as e:
+            raise
