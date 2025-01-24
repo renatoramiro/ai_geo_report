@@ -15,7 +15,7 @@ class GeneratePDFTool(BaseTool):
             os.makedirs(relatorios_dir, exist_ok=True)
             
             # Gerar PDF usando caminho relativo
-            pdf_name = os.path.join(relatorios_dir, f'relatorio_{self.file_name}.pdf')
+            pdf_name = os.path.join(relatorios_dir, f'{self.file_name}.pdf')
             
             md2pdf(pdf_file_path=pdf_name, md_content=markdown)
             
