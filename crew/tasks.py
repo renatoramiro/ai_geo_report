@@ -25,7 +25,7 @@ A partir da mensagem fornecida pelo usuário, estruture os dados com os seguinte
         return Task(
             agent=agent,
             description="""
-Com base nos dados fornecidos pelo agente Coletor de Dados, elabore um relatório geológico estruturado. O relatório deve incluir os seguintes tópicos:
+Com base nos dados fornecidos pelo agente Coletor de Dados e no estilo de escrita, que está em <write_style>, elabore um relatório geológico estruturado. O relatório deve incluir os seguintes tópicos:
 
 1. Identificação e Localização: Nome ou código do terreno, coordenadas e localização detalhada.
 2. Objetivo do Relatório: Descreva o motivo pelo qual o terreno está sendo analisado.
@@ -34,6 +34,10 @@ Com base nos dados fornecidos pelo agente Coletor de Dados, elabore um relatóri
 Use linguagem clara, objetiva e profissional. Estruture o relatório com títulos e subtítulos para facilitar a leitura. Certifique-se de que todas as informações fornecidas sejam incorporadas corretamente.
 
 Ao final do relatório, não inclua nenhuma consideração final ou informação, apenas inclua os dados fornecidos pelo agente Coletor de Dados.
+
+<write_style>
+{write_style}
+</write_style>
 
 Gere o relatório em PDF e Word.
             """,
