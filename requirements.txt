@@ -1,4 +1,5 @@
 crewai==0.98.0
+crewai-tools==0.32.1
 evolutionapi==0.0.9
 fastapi==0.115.6
 uvicorn==0.34.0

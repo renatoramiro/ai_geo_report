@@ -2,11 +2,16 @@ from datetime import datetime
 import os
 import pytz
 import warnings
+import logging
 from fastapi import FastAPI, Request
 from message_whatsapp import MessageWhatsapp
 from crew.geo_crew import GeoCrew
+from writing_style_crew.writing_style_crew import WritingStyleCrew
 from send_whatsapp import SendWhatsapp
 from transcribe_audio import transcribe_audio
+
+# Configure logging to suppress debug messages
+logging.basicConfig(level=logging.INFO)
 
 # Suprimir warnings específicos do Pydantic
 warnings.filterwarnings("ignore", message="Valid config keys have changed in V2")
@@ -39,12 +44,15 @@ async def process_and_send_report(text: str, wa_message: MessageWhatsapp) -> dic
         # Gerar nome do arquivo baseado no timestamp
         timestamp = datetime.now(pytz.timezone('America/Sao_Paulo')).strftime('%Y%m%d_%H%M%S')
         file_name = f"relatorio_{timestamp}"
+
+        write_style_crew = WritingStyleCrew()
+        response_write_style = write_style_crew.run()
         
         # Criar instância do GeoCrew
         crew = GeoCrew()
         
         # Executar o processo
-        result = crew.run(text, file_name)
+        result = crew.run(text, file_name, response_write_style)
         
         # Verificar se os arquivos foram gerados
         pdf_file = os.path.join(relatorios_dir, f'{file_name}.pdf')

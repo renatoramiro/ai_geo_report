@@ -19,7 +19,7 @@ headers = {
 
 # Faça a requisição POST
 try:
-    response = requests.post("http://localhost:6248/webhook", data=json_data, headers=headers)
+    response = requests.post("http://geologia_app:6248/webhook", data=json_data, headers=headers)
     
     # Verifique o status da resposta
     if response.status_code == 200:

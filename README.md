@@ -72,6 +72,12 @@ Para testar a integração completa via webhook:
 docker exec CONTAINER_ID python3 test-requests/test_webhook.py
 ```
 
+## Remover docker images
+
+```bash
+docker rmi $(docker images --filter "dangling=true" -q --no-trunc)
+```
+
 ## Estrutura do Projeto
 
 - `main.py`: Aplicação principal FastAPI
