@@ -1,4 +1,4 @@
-FROM ubuntu:22.04
+FROM python:3.11-slim
 
 # Evitar prompts durante a instalação de pacotes
 ENV DEBIAN_FRONTEND=noninteractive
@@ -6,23 +6,34 @@ ENV DEBIAN_FRONTEND=noninteractive
 # Definir diretório de trabalho
 WORKDIR /app
 
-# Instalar Python e outras dependências
-RUN apt-get update && apt-get install -y \
-    python3.11 \
-    python3-pip \
-    python3.11-venv \
+# Adicionar diretório ao PYTHONPATH
+ENV PYTHONPATH=/app:${PYTHONPATH}
+
+# Instalar dependências do sistema
+RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     wkhtmltopdf \
-    && rm -rf /var/lib/apt/lists/*
-
-# Criar link simbólico para python3
-RUN ln -s /usr/bin/python3.11 /usr/bin/python
+    libfontconfig1 \
+    libxrender1 \
+    xfonts-base \
+    xfonts-75dpi \
+    fonts-liberation \
+    # Dependências do WeasyPrint
+    python3-cffi \
+    libcairo2 \
+    libpango-1.0-0 \
+    libpangocairo-1.0-0 \
+    libgdk-pixbuf2.0-0 \
+    libffi-dev \
+    shared-mime-info \
+    && rm -rf /var/lib/apt/lists/* \
+    && apt-get clean
 
 # Copiar requirements.txt
 COPY requirements.txt .
 
 # Instalar dependências Python
-RUN pip install -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Criar diretório para relatórios
 RUN mkdir -p /app/relatorios && chmod 777 /app/relatorios

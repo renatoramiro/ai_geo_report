@@ -1,6 +1,6 @@
 from crewai import Crew
-from agents import Agents
-from tasks import Tasks
+from .agents import Agents
+from .tasks import Tasks
 import os
 
 class ReadTemplateCrew:

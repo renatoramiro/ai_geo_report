@@ -54,6 +54,7 @@ local_settings.py
 # Database
 *.sqlite3
 *.db
+db/
 
 # Coverage reports
 htmlcov/
