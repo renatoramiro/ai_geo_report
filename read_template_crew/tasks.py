@@ -1,5 +1,5 @@
 from crewai import Task
-from tools.pdf_to_md_tool import PDFToMDTool
+from .tools.pdf_to_md_tool import PDFToMDTool
 
 class Tasks:
     def identificar_template(self, agent, pdf_path: str):

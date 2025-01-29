@@ -7,6 +7,8 @@ from fastapi import FastAPI, Request
 from message_whatsapp import MessageWhatsapp
 from crew.geo_crew import GeoCrew
 from writing_style_crew.writing_style_crew import WritingStyleCrew
+from read_template_crew import ReadTemplateCrew
+
 from send_whatsapp import SendWhatsapp
 from transcribe_audio import transcribe_audio
 
@@ -45,14 +47,18 @@ async def process_and_send_report(text: str, wa_message: MessageWhatsapp) -> dic
         timestamp = datetime.now(pytz.timezone('America/Sao_Paulo')).strftime('%Y%m%d_%H%M%S')
         file_name = f"relatorio_{timestamp}"
 
+        read_template_crew = ReadTemplateCrew()
+        template_path = 'meu_template.pdf'
+        template_crew_result = read_template_crew.run(file_path=template_path)
+
         write_style_crew = WritingStyleCrew()
         response_write_style = write_style_crew.run()
-        
+
         # Criar instância do GeoCrew
         crew = GeoCrew()
         
         # Executar o processo
-        result = crew.run(text, file_name, response_write_style)
+        result = crew.run(text, file_name, response_write_style, template_crew_result)
         
         # Verificar se os arquivos foram gerados
         pdf_file = os.path.join(relatorios_dir, f'{file_name}.pdf')

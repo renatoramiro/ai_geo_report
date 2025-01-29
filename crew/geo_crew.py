@@ -7,7 +7,7 @@ class GeoCrew():
         self.agents = Agents()
         self.tasks = Tasks()
 
-    def run(self, user_data, file_name, write_style):
+    def run(self, user_data, file_name, write_style, topics):
         coletor = self.agents.coletor_dados()
         relator = self.agents.escritor_relatorio()
 
@@ -20,7 +20,7 @@ class GeoCrew():
             verbose=True
         )
 
-        result = crew.kickoff(inputs={"user_data": user_data, "write_style": write_style})
+        result = crew.kickoff(inputs={"user_data": user_data, "write_style": write_style, "topics": topics})
         # print('========= Resultado ==========')
         # print(str(result.raw))
         return str(result.raw)
