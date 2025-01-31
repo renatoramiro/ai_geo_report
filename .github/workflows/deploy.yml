@@ -62,6 +62,17 @@ jobs:
             --restart unless-stopped \
             ${{ secrets.DOCKER_HUB_USERNAME }}/ai_geologia_nginx:latest
 
+    - name: Test SSH Connection
+      uses: appleboy/ssh-action@v1.2.0
+      with:
+        host: ${{ secrets.VPS_IP }}
+        username: ${{ secrets.VPS_SSH_USER }}
+        key: ${{ secrets.VPS_SSH_KEY }}
+        script: |
+          whoami
+          pwd
+          echo "SSH connection successful!"
+
     - name: Deploy to VPS
       uses: appleboy/ssh-action@v1.2.0
       with:
