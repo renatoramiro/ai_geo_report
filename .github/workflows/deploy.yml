@@ -72,7 +72,7 @@ jobs:
             ${{ secrets.DOCKER_HUB_USERNAME }}/ai_geologia_nginx:latest
 
     - name: Deploy to VPS
-      uses: appleboy/ssh-action@v1
+      uses: appleboy/ssh-action@v1.2.0
       with:
         host: ${{ secrets.VPS_IP }}
         username: ${{ secrets.VPS_SSH_USER }}
