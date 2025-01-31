@@ -62,11 +62,10 @@ jobs:
         script: |
           # Criar diretórios necessários
           mkdir -p /home/deployer/ai_geologia/relatorios
-          sudo mkdir -p /home/deployer/ai_geologia/nginx/ssl
+          mkdir -p /home/deployer/ai_geologia/nginx/ssl
           
-          # Configurar permissões
-          sudo chown -R deployer:deployer /home/deployer/ai_geologia
-          sudo chmod -R 755 /home/deployer/ai_geologia
+          # Export da variável de ambiente
+          export DOCKER_HUB_USERNAME="${{ secrets.DOCKER_HUB_USERNAME }}"
           
           # Deploy dos containers
           cd /home/deployer/ai_geologia

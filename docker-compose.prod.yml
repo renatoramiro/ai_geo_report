@@ -2,14 +2,14 @@ version: '3.8'
 
 services:
   app:
-    image: ${{ secrets.DOCKER_HUB_USERNAME }}/ai_geologia:latest
+    image: ${DOCKER_HUB_USERNAME}/ai_geologia:latest
     volumes:
       - /home/deployer/ai_geologia/relatorios:/app/relatorios
     networks:
       - ai_geologia_network
 
   nginx:
-    image: ${{ secrets.DOCKER_HUB_USERNAME }}/ai_geologia_nginx:latest
+    image: ${DOCKER_HUB_USERNAME}/ai_geologia_nginx:latest
     ports:
       - "80:80"
       - "443:443"
