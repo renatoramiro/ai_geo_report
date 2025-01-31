@@ -6,5 +6,6 @@ class PDFToMDTool(BaseTool):
     description: str = "Convert PDF to Markdown"
     template_path: str
 
-    def _run(self, template_path: str) -> str:
+    def _run(self) -> str:
+        """Converte o arquivo PDF para Markdown."""
         return pymupdf4llm.to_markdown(self.template_path)
