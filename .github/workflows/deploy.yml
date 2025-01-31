@@ -43,6 +43,16 @@ jobs:
           pwd
           echo "SSH connection successful!"
 
+    - name: Copy docker-compose to VPS
+      uses: appleboy/scp-action@v0.1.4
+      with:
+        host: ${{ secrets.VPS_IP }}
+        username: ${{ secrets.VPS_SSH_USER }}
+        key: ${{ secrets.VPS_SSH_KEY }}
+        source: "docker-compose.prod.yml"
+        target: "/home/deployer/ai_geologia"
+        overwrite: true
+
     - name: Deploy to VPS
       uses: appleboy/ssh-action@v1.2.0
       with:
@@ -57,9 +67,6 @@ jobs:
           # Configurar permissões
           sudo chown -R deployer:deployer /home/deployer/ai_geologia
           sudo chmod -R 755 /home/deployer/ai_geologia
-          
-          # Copiar docker-compose.prod.yml
-          cp docker-compose.prod.yml /home/deployer/ai_geologia/
           
           # Deploy dos containers
           cd /home/deployer/ai_geologia
