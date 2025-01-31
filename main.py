@@ -7,7 +7,7 @@ from fastapi import FastAPI, Request
 from message_whatsapp import MessageWhatsapp
 from crew.geo_crew import GeoCrew
 from writing_style_crew.writing_style_crew import WritingStyleCrew
-from read_template_crew import ReadTemplateCrew
+from read_template_crew import EstruturadorCrew, IdentificadorSecoesCrew
 
 from send_whatsapp import SendWhatsapp
 from transcribe_audio import transcribe_audio
@@ -29,6 +29,10 @@ os.makedirs(relatorios_dir, exist_ok=True)
 def root():
     return {"message": "Geology Report Generation API is running"}
 
+@app.get("/webhook")
+async def webhook_test():
+    return {"message": "Webhook endpoint is working"}
+
 async def process_and_send_report(text: str, wa_message: MessageWhatsapp) -> dict:
     """
     Processa o texto e envia o relatório via WhatsApp
@@ -47,38 +51,43 @@ async def process_and_send_report(text: str, wa_message: MessageWhatsapp) -> dic
         timestamp = datetime.now(pytz.timezone('America/Sao_Paulo')).strftime('%Y%m%d_%H%M%S')
         file_name = f"relatorio_{timestamp}"
 
-        read_template_crew = ReadTemplateCrew()
-        template_path = 'meu_template.pdf'
-        template_crew_result = read_template_crew.run(file_path=template_path)
+        # read_template_crew = ReadTemplateCrew()
+        # template_path = 'meu_template.pdf'
+        # template_crew_result = read_template_crew.run(file_path=template_path)
 
-        write_style_crew = WritingStyleCrew()
-        response_write_style = write_style_crew.run()
+        # write_style_crew = WritingStyleCrew()
+        # response_write_style = write_style_crew.run()
 
-        # Criar instância do GeoCrew
-        crew = GeoCrew()
+        # # Criar instância do GeoCrew
+        # crew = GeoCrew()
         
-        # Executar o processo
-        result = crew.run(text, file_name, response_write_style, template_crew_result)
+        # # Executar o processo
+        # result = crew.run(text, file_name, response_write_style, template_crew_result)
         
         # Verificar se os arquivos foram gerados
-        pdf_file = os.path.join(relatorios_dir, f'{file_name}.pdf')
-        docx_file = os.path.join(relatorios_dir, f'{file_name}.docx')
+        # pdf_file = os.path.join(relatorios_dir, f'{file_name}.pdf')
+        # docx_file = os.path.join(relatorios_dir, f'{file_name}.docx')
         
-        if not os.path.exists(pdf_file) or not os.path.exists(docx_file):
-            return {"status": "error", "message": "Falha ao gerar os arquivos do relatório"}
+        # if not os.path.exists(pdf_file) or not os.path.exists(docx_file):
+        #     return {"status": "error", "message": "Falha ao gerar os arquivos do relatório"}
         
-        # Enviar o PDF
-        whatsapp.send_pdf(
+        # # Enviar o PDF
+        # whatsapp.send_pdf(
+        #     number=wa_message.remote_jid.split('@')[0],
+        #     pdf_file=pdf_file,
+        #     caption="Aqui está seu relatório em PDF!"
+        # )
+        
+        # # Enviar o DOCX
+        # whatsapp.send_document(
+        #     number=wa_message.remote_jid.split('@')[0],
+        #     document_file=docx_file,
+        #     caption="E aqui está a versão editável em Word!"
+        # )
+
+        whatsapp.textMessage(
             number=wa_message.remote_jid.split('@')[0],
-            pdf_file=pdf_file,
-            caption="Aqui está seu relatório em PDF!"
-        )
-        
-        # Enviar o DOCX
-        whatsapp.send_document(
-            number=wa_message.remote_jid.split('@')[0],
-            document_file=docx_file,
-            caption="E aqui está a versão editável em Word!"
+            msg="Segura essa bomba!"
         )
         
         return {"status": "success", "message": "Relatório gerado e enviado com sucesso!"}

@@ -7,7 +7,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 WORKDIR /app
 
 # Adicionar diretório ao PYTHONPATH
-ENV PYTHONPATH=/app:${PYTHONPATH}
+ENV PYTHONPATH=/app
 
 # Instalar dependências do sistema
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -19,30 +19,26 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     xfonts-75dpi \
     fonts-liberation \
     # Dependências do WeasyPrint
-    python3-cffi \
-    libcairo2 \
     libpango-1.0-0 \
-    libpangocairo-1.0-0 \
-    libgdk-pixbuf2.0-0 \
-    libffi-dev \
-    shared-mime-info \
-    && rm -rf /var/lib/apt/lists/* \
-    && apt-get clean
+    libharfbuzz0b \
+    libpangoft2-1.0-0 \
+    && rm -rf /var/lib/apt/lists/*
 
-# Copiar requirements.txt
+# Copiar arquivos de dependências
 COPY requirements.txt .
 
 # Instalar dependências Python
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Criar diretório para relatórios
-RUN mkdir -p /app/relatorios && chmod 777 /app/relatorios
-
-# Copiar o código fonte
+# Copiar o código da aplicação
 COPY . .
 
-# Expor porta
+# Expor a porta que a aplicação usa
 EXPOSE 6248
+
+# Definir variáveis de ambiente
+ENV FLASK_APP=app.py
+ENV FLASK_ENV=production
 
 # Comando para iniciar a aplicação
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "6248"]
