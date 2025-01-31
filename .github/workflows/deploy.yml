@@ -32,36 +32,6 @@ jobs:
         push: true
         tags: ${{ secrets.DOCKER_HUB_USERNAME }}/ai_geologia_nginx:latest
     
-    - name: Deploy to server
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ secrets.SERVER_HOST }}
-        username: ${{ secrets.SERVER_USERNAME }}
-        key: ${{ secrets.SERVER_SSH_KEY }}
-        script: |
-          cd /home/renato/ai_geologia
-          docker compose -f docker-compose.prod.yml pull
-          docker compose -f docker-compose.prod.yml up -d --build
-          
-          # Rodar a aplicação
-          docker run -d \
-            --name ai_geologia \
-            --network ai_geologia_network \
-            -v /path/to/relatorios:/app/relatorios \
-            --restart unless-stopped \
-            ${{ secrets.DOCKER_HUB_USERNAME }}/ai_geologia:latest
-          
-          # Rodar o Nginx
-          docker run -d \
-            --name ai_geologia_nginx \
-            --network ai_geologia_network \
-            -p 80:80 \
-            -p 443:443 \
-            -v /path/to/ssl/fullchain.pem:/etc/nginx/ssl/fullchain.pem:ro \
-            -v /path/to/ssl/privkey.pem:/etc/nginx/ssl/privkey.pem:ro \
-            --restart unless-stopped \
-            ${{ secrets.DOCKER_HUB_USERNAME }}/ai_geologia_nginx:latest
-
     - name: Test SSH Connection
       uses: appleboy/ssh-action@v1.2.0
       with:
@@ -87,6 +57,9 @@ jobs:
           # Configurar permissões
           sudo chown -R deployer:deployer /home/deployer/ai_geologia
           sudo chmod -R 755 /home/deployer/ai_geologia
+          
+          # Copiar docker-compose.prod.yml
+          cp docker-compose.prod.yml /home/deployer/ai_geologia/
           
           # Deploy dos containers
           cd /home/deployer/ai_geologia
