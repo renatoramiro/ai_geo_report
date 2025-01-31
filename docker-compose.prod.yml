@@ -11,8 +11,8 @@ services:
   nginx:
     image: ${DOCKER_HUB_USERNAME}/ai_geologia_nginx:latest
     ports:
-      - "80:80"
-      - "443:443"
+      - "8080:80"  # Porta HTTP
+      - "8443:443" # Porta HTTPS
     volumes:
       - /home/deployer/ai_geologia/nginx/ssl:/etc/nginx/ssl
     networks:
