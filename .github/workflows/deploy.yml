@@ -39,12 +39,9 @@ jobs:
         username: ${{ secrets.SERVER_USERNAME }}
         key: ${{ secrets.SERVER_SSH_KEY }}
         script: |
-          # Criar rede Docker se não existir
-          docker network create ai_geologia_network || true
-          
-          # Parar e remover containers existentes
-          docker stop ai_geologia ai_geologia_nginx || true
-          docker rm ai_geologia ai_geologia_nginx || true
+          cd /home/renato/ai_geologia
+          docker compose -f docker-compose.prod.yml pull
+          docker compose -f docker-compose.prod.yml up -d --build
           
           # Rodar a aplicação
           docker run -d \
@@ -72,8 +69,19 @@ jobs:
         username: ${{ secrets.VPS_SSH_USER }}
         key: ${{ secrets.VPS_SSH_KEY }}
         script: |
-          cd /home/renato/ai_geologia
+          # Criar diretórios necessários
+          mkdir -p /home/deployer/ai_geologia/relatorios
+          sudo mkdir -p /home/deployer/ai_geologia/nginx/ssl
+          
+          # Configurar permissões
+          sudo chown -R deployer:deployer /home/deployer/ai_geologia
+          sudo chmod -R 755 /home/deployer/ai_geologia
+          
+          # Deploy dos containers
+          cd /home/deployer/ai_geologia
           docker compose -f docker-compose.prod.yml pull
           docker compose -f docker-compose.prod.yml up -d --build
+          
+          # Limpeza de recursos não utilizados
           docker system prune -af --filter "until=72h"
           docker volume prune -f
