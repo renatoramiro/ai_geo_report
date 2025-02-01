@@ -60,8 +60,11 @@ jobs:
           # Criar arquivo .env
           cat > /home/deployer/ai_geologia/.env << EOL
           OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}
-          WHATSAPP_API_KEY=${{ secrets.WHATSAPP_API_KEY }}
-          WHATSAPP_API_URL=${{ secrets.WHATSAPP_API_URL }}
+          EVOLUTION_BASE_URL=${{ secrets.EVOLUTION_BASE_URL }}
+          EVOLUTION_API_TOKEN=${{ secrets.EVOLUTION_API_TOKEN }}
+          EVOLUTION_INSTANCE=${{ secrets.EVOLUTION_INSTANCE }}
+          EVOLUTION_INSTANCE_TOKEN=${{ secrets.EVOLUTION_INSTANCE_TOKEN }}
+          GROQ_API_KEY=${{ secrets.GROQ_API_KEY }}
           EOL
           
           # Export da variável de ambiente
