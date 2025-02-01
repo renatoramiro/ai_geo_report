@@ -5,6 +5,8 @@ services:
     image: ${DOCKER_HUB_USERNAME}/ai_geologia:latest
     volumes:
       - /home/deployer/ai_geologia/relatorios:/app/relatorios
+    env_file:
+      - .env
     networks:
       - SmartAutoHubNet
     deploy:
