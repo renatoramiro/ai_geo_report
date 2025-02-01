@@ -7,18 +7,31 @@ services:
       - /home/deployer/ai_geologia/relatorios:/app/relatorios
     networks:
       - ai_geologia_network
-
-  nginx:
-    image: ${DOCKER_HUB_USERNAME}/ai_geologia_nginx:latest
-    ports:
-      - "8080:80"  # Porta HTTP
-    volumes:
-      - /home/deployer/ai_geologia/nginx/ssl:/etc/nginx/ssl
-    networks:
-      - ai_geologia_network
-    depends_on:
-      - app
+      - traefik-public  # Rede do Traefik
+    deploy:
+          mode: replicated
+          replicas: 1
+          placement:
+              constraints:
+                - node.role == manager
+          resources:
+              limits:
+                cpus: '0.5'
+                memory: 384M
+              reservations:
+                cpus: '0.25'
+                memory: 256M
+          labels: 
+              - traefik.enable=true
+              - traefik.http.routers.geologia_app.rule=Host(`geologia.smartautohub.net`)
+              - traefik.http.services.geologia_app.loadbalancer.server.port=6248
+              - traefik.http.routers.geologia_app.service=geologia_app
+              - traefik.http.routers.geologia_app.tls.certresolver=letsencryptresolver
+              - traefik.http.routers.geologia_app.entrypoints=websecure
+              - traefik.http.routers.geologia_app.tls=true
 
 networks:
   ai_geologia_network:
     driver: bridge
+  traefik-public:
+    external: true  # Usar a rede existente do Traefik
