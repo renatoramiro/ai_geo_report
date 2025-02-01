@@ -40,6 +40,10 @@ async def process_and_send_report(text: str, wa_message: MessageWhatsapp) -> dic
     try:
         # Criar instância do SendWhatsapp
         whatsapp = SendWhatsapp()
+
+        print('=== SendWhatsapp ===')
+        print('Enviando mensagem de confirmação')
+        print('======================')
         
         # Enviar mensagem de confirmação
         whatsapp.textMessage(
@@ -122,6 +126,10 @@ async def webhook(request: Request):
         # Criar instância de MessageWhatsapp
         wa_message = MessageWhatsapp(data)
 
+        print('=== MensagemWhatsapp ===')
+        print(wa_message.data)
+        print('=========================')
+
         text = None
         
         # Verificar se há áudio
@@ -138,6 +146,9 @@ async def webhook(request: Request):
         
         # Se temos texto válido (seja da mensagem ou do áudio), processar
         if text and text.strip():
+            print('=== Texto Valido ===')
+            print(text)
+            print('======================')
             return await process_and_send_report(text, wa_message)
         
         return {"status": "error", "message": "Nenhum texto válido encontrado na mensagem"}
