@@ -6,7 +6,7 @@ services:
     volumes:
       - /home/deployer/ai_geologia/relatorios:/app/relatorios
     networks:
-      - default
+      - SmartAutoHubNet
     labels:
       - traefik.enable=true
       - traefik.http.routers.geologia_app.rule=Host(`geologia.smartautohub.net`)
@@ -17,6 +17,5 @@ services:
       - traefik.http.routers.geologia_app.tls=true
 
 networks:
-  ai_geologia_network:
-    name: traefik_public
+  SmartAutoHubNet:
     external: true
