@@ -7,14 +7,17 @@ services:
       - /home/deployer/ai_geologia/relatorios:/app/relatorios
     networks:
       - SmartAutoHubNet
-    labels:
-      - traefik.enable=true
-      - traefik.http.routers.geologia_app.rule=Host(`geologia.smartautohub.net`)
-      - traefik.http.services.geologia_app.loadbalancer.server.port=6248
-      - traefik.http.routers.geologia_app.service=geologia_app
-      - traefik.http.routers.geologia_app.tls.certresolver=letsencryptresolver
-      - traefik.http.routers.geologia_app.entrypoints=websecure
-      - traefik.http.routers.geologia_app.tls=true
+    deploy:
+      mode: replicated
+      replicas: 1
+      labels:
+        - traefik.enable=true
+        - traefik.http.routers.geologia_app.rule=Host(`geologia.smartautohub.net`)
+        - traefik.http.services.geologia_app.loadbalancer.server.port=6248
+        - traefik.http.routers.geologia_app.service=geologia_app
+        - traefik.http.routers.geologia_app.tls.certresolver=letsencryptresolver
+        - traefik.http.routers.geologia_app.entrypoints=websecure
+        - traefik.http.routers.geologia_app.tls=true
 
 networks:
   SmartAutoHubNet:
