@@ -114,6 +114,10 @@ async def webhook(request: Request):
     try:
         # Receber e processar os dados do webhook
         data = await request.json()
+
+        print('=== Dados do Webhook ===')
+        print(data)
+        print('=========================')
         
         # Criar instância de MessageWhatsapp
         wa_message = MessageWhatsapp(data)
