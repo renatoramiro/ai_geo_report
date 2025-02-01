@@ -125,17 +125,18 @@ async def webhook(request: Request):
             audio_base64 = wa_message.get_audio()
             if audio_base64:
                 text = await process_audio(audio_base64, wa_message)
+                if text is None:
+                    return {"status": "error", "message": "Não foi possível processar o áudio"}
                 
         # Verificar se tem texto
         elif wa_message.message_type == wa_message.TYPE_TEXT:
             text = wa_message.get_text()
         
-        # Se temos texto (seja da mensagem ou do áudio), processar
-        if text:
-            # return "Texto recebido: " + text
+        # Se temos texto válido (seja da mensagem ou do áudio), processar
+        if text and text.strip():
             return await process_and_send_report(text, wa_message)
         
-        return {"status": "error", "message": "Nenhum texto ou áudio encontrado na mensagem"}
+        return {"status": "error", "message": "Nenhum texto válido encontrado na mensagem"}
         
     except Exception as e:
         return {"status": "error", "message": str(e)}
