@@ -59,10 +59,9 @@ jobs:
           # Export da variável de ambiente
           export DOCKER_HUB_USERNAME="${{ secrets.DOCKER_HUB_USERNAME }}"
           
-          # Deploy dos containers
+          # Deploy usando docker stack
           cd /home/deployer/ai_geologia
-          docker compose -f docker-compose.prod.yml pull
-          docker compose -f docker-compose.prod.yml up -d --build
+          docker stack deploy -c docker-compose.prod.yml ai_geologia --with-registry-auth
           
           # Limpeza de recursos não utilizados
           docker system prune -af --filter "until=72h"
