@@ -7,7 +7,6 @@ services:
       - /home/deployer/ai_geologia/relatorios:/app/relatorios
     networks:
       - ai_geologia_network
-    mem_limit: 256M
     labels:
       - traefik.enable=true
       - traefik.http.routers.geologia_app.rule=Host(`geologia.smartautohub.net`)
