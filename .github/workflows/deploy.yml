@@ -25,13 +25,6 @@ jobs:
         push: true
         tags: ${{ secrets.DOCKER_HUB_USERNAME }}/ai_geologia:latest
 
-    - name: Build and push Nginx image
-      uses: docker/build-push-action@v4
-      with:
-        context: ./nginx
-        push: true
-        tags: ${{ secrets.DOCKER_HUB_USERNAME }}/ai_geologia_nginx:latest
-    
     - name: Test SSH Connection
       uses: appleboy/ssh-action@v1.2.0
       with:
@@ -43,16 +36,6 @@ jobs:
           pwd
           echo "SSH connection successful!"
 
-    - name: Copy docker-compose to VPS
-      uses: appleboy/scp-action@v0.1.4
-      with:
-        host: ${{ secrets.VPS_IP }}
-        username: ${{ secrets.VPS_SSH_USER }}
-        key: ${{ secrets.VPS_SSH_KEY }}
-        source: "docker-compose.prod.yml"
-        target: "/home/deployer/ai_geologia"
-        overwrite: true
-
     - name: Deploy to VPS
       uses: appleboy/ssh-action@v1.2.0
       with:
@@ -62,10 +45,6 @@ jobs:
         script: |
           # Criar diretórios necessários
           mkdir -p /home/deployer/ai_geologia/relatorios
-          mkdir -p /home/deployer/ai_geologia/nginx/ssl
-          
-          # Export da variável de ambiente
-          export DOCKER_HUB_USERNAME="${{ secrets.DOCKER_HUB_USERNAME }}"
           
           # Deploy dos containers
           cd /home/deployer/ai_geologia
